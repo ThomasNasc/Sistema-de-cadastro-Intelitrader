@@ -56,7 +56,7 @@ function Create_Edit(props) {
     const id = props.User ? props.User.id : "";
     axios[method](`http://localhost:8080/api/Users/${id}`, userInfo)
       .then((resp) => {
-
+        props.changePage("list")
       })
       .catch((erro) => console.log(erro));
   }
