@@ -4,7 +4,7 @@ import styled from "styled-components";
 const ListStyle = styled.div`
   padding-top: 20px;
   td {
-    border: 0.2px solid black;
+    border: 1px solid #000102a4;
     width: 20vw;
     font-size: 12px;
     text-align: center;
@@ -23,7 +23,7 @@ const ListStyle = styled.div`
   }
   table {
     border-spacing: 0px;
-    border: 1px solid black;
+    border: 0.5px solid #00000062;
     border-radius: 5px;
 
     thead {
@@ -31,7 +31,8 @@ const ListStyle = styled.div`
         td {
           text-transform: uppercase;
           font-weight: bold;
-          font-size: 10px;
+          font-size: 9px;
+          background-color: #7edbff;
           @media screen and (min-width: 500px) {
             font-size: 16px;
           }
@@ -39,6 +40,9 @@ const ListStyle = styled.div`
       }
     }
     tbody {
+      .idColumn{
+        font-size: 10px;
+      }
       button {
         border: none;
         border-radius: 50px;
@@ -48,23 +52,25 @@ const ListStyle = styled.div`
         :hover {
           background-color: #7edbff;
           border-color: white;
-   
         }
         svg {
           width: 15px;
           height: 15px;
-      
         }
       }
     }
   }
 `;
 function List(props) {
+
   return (
+
+
     <ListStyle>
       <table>
         <thead>
           <tr>
+            <td>Id</td>
             <td>Nome</td>
             <td>Sobrenome</td>
             <td className="tdShortWdt">Idade</td>
@@ -77,6 +83,7 @@ function List(props) {
           {props.List.map((user, index) => {
             return (
               <tr key={index}>
+                <td className="idColumn">{user.id}</td>
                 <td>{user.firstName}</td>
                 <td>{user.surName}</td>
                 <td className="tdShortWdt">{user.age}</td>
@@ -87,6 +94,7 @@ function List(props) {
                 </td>
                 <td className="tdShortWdt">
                   <button
+                    data-testid="editar"
                     onClick={() => {
                       props.changePage("edit");
                       props.getUser(user);
@@ -124,4 +132,4 @@ function List(props) {
   );
 }
 
-export default List;
+export default React.memo(List) ;

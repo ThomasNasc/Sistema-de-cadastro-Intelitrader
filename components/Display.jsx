@@ -10,16 +10,27 @@ const DisplayStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   .Header {
     height: 80px;
     width: 100%;
-    background-color: #7edbff;
+    background-color: #08b9ff;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 0px 0px 30px 30px;
+    padding-left: 30px;
+    padding-right: 30px;
     h1 {
       font-size: 20px;
-      padding-left: 10px;
+
+      
+    }
+    .status{
+      font-size: 12px;
+      color: #000000;
+      height: 5px;
+      padding-bottom: 5px;
     }
     .buttons {
       display: flex;
@@ -41,7 +52,11 @@ function Display(props) {
   return (
     <DisplayStyle>
       <div className="Header">
-        <h1>Sistema de Cadastro</h1>
+        <div>
+        <h1>SISTEMA DE CADASTRO</h1>
+        <h1 className="status">{props.toShowStatus}</h1>
+        </div>
+
         <div className="buttons">
           <button onClick={() => props.changePage("create")}>
             Novo Usuario

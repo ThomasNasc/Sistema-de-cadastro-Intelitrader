@@ -7,31 +7,38 @@ const Form = styled.div`
   form {
     display: flex;
     flex-direction: column;
+    p {
+      margin-top: 15px;
+      font-size: 10px;
+    }
     label {
       display: flex;
       flex-direction: column;
-      margin-top: 5px;
+      margin-top: 20px;
+
       input {
-        height: 30px;
-        border-radius: 3px;
-        padding: 5px;
+        height: 40px;
+        border-radius: 10px;
+        margin-top: 5px;
+        padding-left: 5px;
       }
       input:read-only {
         color: gray;
         border: 2px solid gray;
       }
+
       .AgeInput {
-        width: 100px;
+        width: 60px;
       }
     }
     button {
       height: 40px;
-      margin-top: 15px;
+
       border-radius: 5px;
       cursor: pointer;
       :hover {
         background-color: #7edbff;
-        border-color: white;
+        border-color: #000000;
         color: white;
       }
     }
@@ -55,8 +62,24 @@ function Create_Edit(props) {
   function submit(userInfo, method) {
     const id = props.User ? props.User.id : "";
     axios[method](`http://localhost:8080/api/Users/${id}`, userInfo)
-      .then((resp) => {
-        props.changePage("list")
+      .then(() => {
+        props.changePage("list");
+        let statusMsg = "";
+        switch (method) {
+          case "post":
+            statusMsg = "Usuario adicionado com sucesso";
+            break;
+          case "put":
+            statusMsg = "Alterações salvas com sucesso";
+            break;
+          case "delete":
+            statusMsg = "Usuario apagado com sucesso";
+            break;
+        }
+        props.defineStatus(statusMsg);
+        setTimeout(() => {
+          props.defineStatus("");
+        }, 5000);
       })
       .catch((erro) => console.log(erro));
   }
@@ -72,6 +95,7 @@ function Create_Edit(props) {
         <label htmlFor="InserirNome">
           *Nome
           <input
+            placeholder="Insira um nome..."
             required={true}
             readOnly={props.boolReadOnly}
             id="InserirNome"
@@ -83,6 +107,7 @@ function Create_Edit(props) {
         <label htmlFor="InserirNome">
           Sobrenome
           <input
+            placeholder="Insira um sobrenome..."
             readOnly={props.boolReadOnly}
             id="InserirNome"
             value={surName}
@@ -103,6 +128,7 @@ function Create_Edit(props) {
             type="number"
           />
         </label>
+        <p>* Valores Obrigatorios</p>
         <button type="submit">Concluir</button>
       </form>
     </Form>
