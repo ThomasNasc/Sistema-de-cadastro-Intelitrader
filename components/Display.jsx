@@ -14,36 +14,56 @@ const DisplayStyle = styled.div`
   .Header {
     height: 80px;
     width: 100%;
-    background-color: #08b9ff;
+    padding-top: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: 0px 0px 30px 30px;
-    padding-left: 30px;
-    padding-right: 30px;
+
     h1 {
       font-size: 20px;
-
-      
+      color: white;
+      margin-left: 20px;
+      font-weight: 400;
     }
-    .status{
+    .status {
       font-size: 12px;
-      color: #000000;
+      color: #ff0000;
       height: 5px;
       padding-bottom: 5px;
     }
-    .buttons {
+    .button_container {
       display: flex;
-      flex-direction: column;
+      width: 150px;
       height: 60px;
-      justify-content: space-between;
+      border-radius: 20px;
+      justify-content: space-around;
       margin-right: 10px;
-      button {
-        width: 120px;
+      align-items: center;
+      background-color: #a10f0f;
+      cursor: pointer;
+      border: none;
+      :hover {
+        background-color: #c20b0b90;
+        p {
+          background-color: black;
+          color: white;
+        }
+      }
+      span {
+        display: flex;
+        text-align: center;
+        color: white;
+        font-size: 12px;
+        text-align: center;
+        align-items: center;
+      }
+      p {
+        width: 40px;
         padding: 5px;
-        height: 25px;
-        border-radius: 5px;
-        cursor: pointer;
+        height: 40px;
+        background-color: white;
+        border-radius: 50%;
+        font-size: 30px;
       }
     }
   }
@@ -53,22 +73,21 @@ function Display(props) {
     <DisplayStyle>
       <div className="Header">
         <div>
-        <h1>SISTEMA DE CADASTRO</h1>
-        <h1 className="status">{props.toShowStatus}</h1>
+          <h1>Sistema de cadastro</h1>
+          <h1 className="status">{props.toShowStatus}</h1>
         </div>
 
-        <div className="buttons">
-          <button onClick={() => props.changePage("create")}>
-            Novo Usuario
-          </button>
-          <button onClick={() => props.changePage("list")}>
-            Listar Usuarios
-          </button>
-        </div>
+        <button
+          onClick={() => props.changePage("create")}
+          className="button_container"
+        >
+          <span>Adicionar novo:</span>
+          <p>+</p>
+        </button>
       </div>
       <div className="content">{props.children}</div>
     </DisplayStyle>
   );
 }
 
-export default Display;
+export default React.memo(Display);

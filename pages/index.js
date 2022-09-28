@@ -1,34 +1,16 @@
-import axios from "axios";
 import Display from "../components/Display";
 import styles from "../styles/Home.module.css";
 import List from "../components/List";
 import Create_Edit from "../components/Create_Edit";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
-  const [ListItems, setList] = useState([]);
-  const [actualPage, setActualPage] = useState("list");
+  const [actualPage, setActualPage] = useState("optionsClosed");
   const [UserinFocus, setUserinFocus] = useState([]);
   const [status, setStatus] = useState("");
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/Users/")
-      .then((request) => setList(request.data));
-      
-
-
-  }, [actualPage]);
 
   function SelectPage(page) {
     switch (page) {
-      case "list":
-        return (
-          <List
-            changePage={setActualPage}
-            getUser={setUserinFocus}
-            List={ListItems}
-          />
-        );
       case "create":
         return (
           <Create_Edit
@@ -56,21 +38,19 @@ export default function Home() {
             defineStatus={setStatus}
           />
         );
-
-      default:
-        return (
-          <List
-            changePage={setActualPage}
-            getUser={setUserinFocus}
-            List={ListItems}
-          />
-        );
+    
     }
   }
 
   return (
     <Display toShowStatus={status} changePage={setActualPage}>
       {SelectPage(actualPage)}
+      <List
+            changePage={setActualPage}
+            getUser={setUserinFocus}
+            actualPage={actualPage}
+          />
+      
     </Display>
   );
 }

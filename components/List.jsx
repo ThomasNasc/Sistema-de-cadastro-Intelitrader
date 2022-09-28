@@ -1,38 +1,41 @@
 import React from "react";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ListStyle = styled.div`
   padding-top: 20px;
+  font-weight: 300;
   td {
-    border: 1px solid #000102a4;
-    width: 20vw;
-    font-size: 12px;
+    font-size: 14px;
+    max-width: 500px;
+    width: 100px;
+    height: 50px;
+    color: white;
     text-align: center;
-    max-width: 300px;
-    height: 40px;
-    word-break: break-word;
     @media screen and (min-width: 500px) {
-      font-size: 16px;
+      font-size: 20px;
+      width: 22vw;
     }
   }
   .tdShortWdt {
-    width: 45px;
+    width: 50px;
     @media screen and (min-width: 500px) {
-      width: 75px;
+      width: 100px;
     }
   }
-  table {
-    border-spacing: 0px;
-    border: 0.5px solid #00000062;
-    border-radius: 5px;
+  .Tabela {
+    border-spacing: 0px 3px;
 
     thead {
       tr {
         td {
           text-transform: uppercase;
-          font-weight: bold;
-          font-size: 9px;
-          background-color: #7edbff;
+          font-size: 12px;
+          background-color: #0f0f0f;
+          padding: 5px;
+          font-weight: 600;
+          color: #b9b2b2;
           @media screen and (min-width: 500px) {
             font-size: 16px;
           }
@@ -40,13 +43,46 @@ const ListStyle = styled.div`
       }
     }
     tbody {
-      .idColumn{
-        font-size: 10px;
+      .idCell {
+        font-size: 9px;
+        color: #8d8b8b;
+        padding: 0;
+        letter-spacing: 2px;
+        height: 10px;
+        @media screen and (min-width: 500px) {
+          font-size: 12px;
+          letter-spacing: 2px;
+        }
       }
+      .cell_info {
+        padding: 3px;
+      }
+
+      tr {
+        :hover {
+          background-color: #1b1b1b;
+          tr {
+            background-color: #1b1b1b;
+          }
+        }
+        background-color: #302f2f;
+        td {
+          word-break: break-word;
+          .date {
+            font-size: 12px;
+            @media screen and (min-width: 500px) {
+              font-size: 16px;
+            }
+          }
+        }
+      }
+
       button {
+        width: 40px;
+        height: 40px;
         border: none;
-        border-radius: 50px;
-        background-color: #00ccff63;
+        border-radius: 10px;
+        background-color: #a10f0f;
         padding: 5px;
         cursor: pointer;
         :hover {
@@ -62,17 +98,35 @@ const ListStyle = styled.div`
   }
 `;
 function List(props) {
+  const [ListItems, setList] = useState([]);
+
+  useEffect(() => {
+    const getList = () => {
+      axios
+        .get("http://localhost:8080/api/Users/")
+        .then((request) => {
+          setList(request.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          clearInterval(UpdateList);
+        });
+    };
+    getList();
+    const UpdateList = setInterval(() => {
+      getList();
+    }, 1000);
+    return () => clearInterval(UpdateList);
+  }, []);
 
   return (
-
-
     <ListStyle>
-      <table>
+      <table className="Tabela">
         <thead>
           <tr>
-            <td>Id</td>
             <td>Nome</td>
             <td>Sobrenome</td>
+
             <td className="tdShortWdt">Idade</td>
             <td>Data de Cadastro</td>
             <td className="tdShortWdt">Editar</td>
@@ -80,18 +134,36 @@ function List(props) {
           </tr>
         </thead>
         <tbody>
-          {props.List.map((user, index) => {
+          {ListItems.map((user, index) => {
             return (
               <tr key={index}>
-                <td className="idColumn">{user.id}</td>
-                <td>{user.firstName}</td>
-                <td>{user.surName}</td>
-                <td className="tdShortWdt">{user.age}</td>
-                <td>
-                  {new Date(
-                    new Date(user.dateOfCreation).getTime()
-                  ).toLocaleString("pt-BR")}
+                <td colSpan={4}>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td className="cell_info">{user.firstName}</td>
+                        <td className="cell_info">{user.surName}</td>
+                        <td className="tdShortWdt cell_info">{user.age}</td>
+                        <td className="cell_info  date">
+                          {new Date(
+                            new Date(user.dateOfCreation).getTime()
+                          ).toLocaleString("pt-BR")}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="idCell cell_info" colSpan={4}>
+                          <span
+                            style={{ fontWeight: "bold", color: "#c9c9c9" }}
+                          >
+                            Id:
+                          </span>{" "}
+                          {user.id}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
+
                 <td className="tdShortWdt">
                   <button
                     data-testid="editar"
@@ -132,4 +204,4 @@ function List(props) {
   );
 }
 
-export default React.memo(List) ;
+export default React.memo(List);
