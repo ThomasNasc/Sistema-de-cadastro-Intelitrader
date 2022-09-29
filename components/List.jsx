@@ -141,7 +141,7 @@ function List(props) {
             <td className="tdShortWdt">Idade</td>
             <td>Data de Cadastro</td>
             <td colSpan={2} className="tdShortWdt">
-              Editar/Deletar
+              Editar/<br/>Deletar
             </td>
           </tr>
         </thead>
