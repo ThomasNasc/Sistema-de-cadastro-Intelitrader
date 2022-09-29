@@ -1,20 +1,13 @@
 import {
-  findAllByRole,
-  findByRole,
   fireEvent,
-  getByRole,
-  getByTestId,
-  getByText,
   render,
   screen,
   waitFor,
 } from "@testing-library/react";
 import Home from "../pages";
 import "@testing-library/jest-dom";
-import userEvent from "@testing-library/user-event";
 import Create_Edit from "../components/Create_Edit";
-import axios from "axios";
-import List from "../components/List";
+
 
 describe("Lista de Usuarios", () => {
   test("Tabela com a lista de usuarios disponivel", () => {
@@ -47,9 +40,9 @@ describe("Lista de Usuarios", () => {
 describe("Telas de Controle", () => {
   test("botao de criação de usuario disponivel", () => {
     render(<Home />, { hydrate: true, legacyRoot: true });
-    const botao = screen.getByRole("button", { name: "Novo Usuario" });
+    const botao = screen.getAllByRole('button', {name: "Cadastrar novo usuario: +"});
 
-    expect(botao).toBeInTheDocument();
+    expect(botao[0]).toBeInTheDocument();
   });
 });
 describe("tela de cadastro, edicao e delecao", () => {
@@ -62,25 +55,13 @@ describe("tela de cadastro, edicao e delecao", () => {
   });
   test("botao de submit disponivel", () => {
     render(<Create_Edit />);
-    const buttonSubmit = screen.getByRole("button");
-    expect(buttonSubmit).toBeInTheDocument();
-  });
-  test("elementos de criacao edicao e delecao disponiveis", () => {
-    render(<Create_Edit />);
-    const form = screen.getAllByRole("textbox", {
-      name: "*Nome Sobrenome *Idade",
-    });
-    form.map((e) => expect(e).toBeInTheDocument());
-  });
-  test("botao de submit disponivel", () => {
-    render(<Create_Edit />);
-    const buttonSubmit = screen.getByRole("button");
+    const buttonSubmit = screen.getByText("Concluir");
     expect(buttonSubmit).toBeInTheDocument();
   });
   test("teste do click do botao para a tela de cadastro", async () => {
     render(<Home />);
-    const button = screen.getByText("Novo Usuario");
-    fireEvent.click(button);
+    const button = screen.getAllByRole('button', {name: "Cadastrar novo usuario: +"});
+    fireEvent.click(button[0]);
 
     await waitFor(() => {
       const inputs = screen.getAllByRole("textbox", {
@@ -89,15 +70,5 @@ describe("tela de cadastro, edicao e delecao", () => {
       inputs.map((e) => expect(e).toBeInTheDocument());
     });
   });
-  test("teste do click do botao para a tela de lista de usuarios", async () => {
-    render(<Home />);
-    const button = screen.getByText("Listar Usuarios");
-    fireEvent.click(button);
 
-    await waitFor(() => {
-      const table = screen.getByRole("table");
-
-      expect(table).toBeInTheDocument();
-    });
-  });
 });

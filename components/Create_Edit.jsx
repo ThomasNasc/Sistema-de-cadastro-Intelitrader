@@ -8,13 +8,15 @@ const Form = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #80808058;
+  background-color: #2e232355;
   display: flex;
   justify-content: center;
 
   form {
     width: 350px;
-    background-color: #fffffff2;
+    background-color: #020202dd;
+    color: white;
+    border: 1px solid white;
     height: max-content;
     display: flex;
     flex-direction: column;
@@ -35,6 +37,9 @@ const Form = styled.div`
         border-radius: 10px;
         margin-top: 5px;
         padding-left: 5px;
+        background-color: #ffffff;
+        border: none;
+        
       }
       input:read-only {
         color: gray;
@@ -50,11 +55,28 @@ const Form = styled.div`
       height: 40px;
       margin-bottom: 12px;
       border-radius: 5px;
+      background-color: #811010;
+      color: white;
+      box-shadow: -2px 2px 5px #ff00007d;
+      border: 1px solid white;
       cursor: pointer;
       :hover {
-        background-color: #7edbff;
+        background-color: #fcdddd;
+        border-color: #000000;
+        color: #ff0000; 
+         border: 1px solid #ff0000;
+      }
+    }
+    .cancel{
+      background-color: #d6c8c8;
+      color: black;
+      box-shadow: none;
+      border: 1px solid white;
+      :hover {
+        background-color: #b9b8b8;
         border-color: #000000;
         color: white;
+        border: 1px solid gray;
       }
     }
   }
@@ -68,17 +90,20 @@ function Create_Edit(props) {
     props.User == undefined ? "" : props.User.surName
   );
   const [age, setAge] = useState(props.User == undefined ? "" : props.User.age);
-
+  const [blockButton, setBlock] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const value = {
     firstName: name,
     surName: surName,
     age: age,
   };
+
   function submit(userInfo, method) {
     const id = props.User ? props.User.id : "";
-    props.changePage("optionsClosed");
+    setBlock(true);
     axios[method](`http://localhost:8080/api/Users/${id}`, userInfo)
       .then(() => {
+        props.changePage("optionsClosed");
         let statusMsg = "";
         switch (method) {
           case "post":
@@ -96,7 +121,10 @@ function Create_Edit(props) {
           props.defineStatus("");
         }, 5000);
       })
-      .catch((erro) => console.log(erro));
+      .catch((erro) => {
+        setBlock(false);
+        setErrorMessage("Erro: " + erro.message);
+      });
   }
 
   return (
@@ -107,23 +135,23 @@ function Create_Edit(props) {
           submit(value, props.Methods);
         }}
       >
-        {(props.Methods === "delete" ||
-          props.Methods === "put") && (
-            <div>
-              {props.Methods === "delete" && (
-                <h3>O seguinte usuario será apagado:</h3>
-              )}
-              <label htmlFor="InserirNome">
-                Id
-                <input
-                  required={true}
-                  readOnly={true}
-                  value={props.User.id}
-                  type="text"
-                />
-              </label>
-            </div>
-          )}
+        <h4>{errorMessage}</h4>
+        {(props.Methods === "delete" || props.Methods === "put") && (
+          <div>
+            {props.Methods === "delete" && (
+              <h3>O seguinte usuario será apagado:</h3>
+            )}
+            <label htmlFor="InserirNome">
+              Id
+              <input
+                required={true}
+                readOnly={true}
+                value={props.User.id}
+                type="text"
+              />
+            </label>
+          </div>
+        )}
         <label htmlFor="InserirNome">
           *Nome
           <input
@@ -161,8 +189,11 @@ function Create_Edit(props) {
           />
         </label>
         <p>* Valores Obrigatorios</p>
-        <button type="submit">Concluir</button>
+        <button type="submit" disabled={blockButton}>
+          Concluir
+        </button>
         <button
+        className="cancel"
           onClick={(e) => {
             e.preventDefault();
             props.changePage("optionsClosed");

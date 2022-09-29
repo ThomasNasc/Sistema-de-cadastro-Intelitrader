@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const DisplayStyle = styled.div`
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -20,10 +20,14 @@ const DisplayStyle = styled.div`
     justify-content: space-between;
 
     h1 {
-      font-size: 20px;
+      font-family: "Bebas Neue", cursive;
+      font-size: 22px;
       color: white;
       margin-left: 20px;
       font-weight: 400;
+      @media screen and (min-width: 500px) {
+        font-size: 40px;
+      }
     }
     .status {
       font-size: 12px;
@@ -56,6 +60,7 @@ const DisplayStyle = styled.div`
         font-size: 12px;
         text-align: center;
         align-items: center;
+        width: 60px;
       }
       p {
         width: 40px;
@@ -81,7 +86,7 @@ function Display(props) {
           onClick={() => props.changePage("create")}
           className="button_container"
         >
-          <span>Adicionar novo:</span>
+          <span>Cadastrar novo usuario:</span>
           <p>+</p>
         </button>
       </div>

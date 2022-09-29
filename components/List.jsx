@@ -5,34 +5,33 @@ import axios from "axios";
 
 const ListStyle = styled.div`
   padding-top: 20px;
-  font-weight: 300;
   td {
-    font-size: 14px;
-    max-width: 500px;
-    width: 100px;
-    height: 50px;
+    max-width: 300px;
+    width: 21vw;
     color: white;
+    height: 50px;
     text-align: center;
+    word-break: break-word;
     @media screen and (min-width: 500px) {
-      font-size: 20px;
       width: 22vw;
+      height: 50px;
     }
   }
-  .tdShortWdt {
-    width: 50px;
-    @media screen and (min-width: 500px) {
-      width: 100px;
-    }
-  }
+
   .Tabela {
     border-spacing: 0px 3px;
-
+    .tdShortWdt {
+      width: 45px;
+      @media screen and (min-width: 500px) {
+        width: 100px;
+      }
+    }
     thead {
       tr {
         td {
           text-transform: uppercase;
-          font-size: 12px;
-          background-color: #0f0f0f;
+          font-size: 10px;
+          background-color: #141414;
           padding: 5px;
           font-weight: 600;
           color: #b9b2b2;
@@ -43,55 +42,64 @@ const ListStyle = styled.div`
       }
     }
     tbody {
-      .idCell {
-        font-size: 9px;
-        color: #8d8b8b;
-        padding: 0;
-        letter-spacing: 2px;
-        height: 10px;
-        @media screen and (min-width: 500px) {
-          font-size: 12px;
+      .Linha_Principal {
+        background-color: #302f2f;
+        .idCell {
+          font-size: 10px;
+          color: #8d8b8b;
           letter-spacing: 2px;
+          height: 25px;
+          word-break: normal;
+          @media screen and (min-width: 500px) {
+            font-size: 12px;
+          }
         }
-      }
-      .cell_info {
-        padding: 3px;
-      }
-
-      tr {
         :hover {
           background-color: #1b1b1b;
-          tr {
-            background-color: #1b1b1b;
+          transition: 1s;
+          @media screen and (min-width: 500px) {
+            font-size: 16px;
+            transform: scale(1.03);
           }
         }
-        background-color: #302f2f;
         td {
-          word-break: break-word;
-          .date {
-            font-size: 12px;
-            @media screen and (min-width: 500px) {
-              font-size: 16px;
-            }
+          font-family: "Inconsolata", monospace;
+          font-size: 12px;
+          font-weight: 300;
+          color: #e7e7e7;
+          letter-spacing: 1px;
+          @media screen and (min-width: 500px) {
+            font-size: 20px;
           }
         }
       }
-
+      tr,
+      td {
+        border-radius: 5px;
+      }
       button {
-        width: 40px;
-        height: 40px;
+        width: 95%;
+        height: 80%;
         border: none;
         border-radius: 10px;
         background-color: #a10f0f;
         padding: 5px;
         cursor: pointer;
         :hover {
-          background-color: #7edbff;
+          background-color: #ff7e7e;
           border-color: white;
         }
         svg {
-          width: 15px;
-          height: 15px;
+          width: 20px;
+          height: 20px;
+          @media screen and (min-width: 500px) {
+            width: 30px;
+            height: 30px;
+          }
+        }
+        @media screen and (min-width: 500px) {
+          width: 95%;
+          height: 95%;
         }
       }
     }
@@ -101,8 +109,8 @@ function List(props) {
   const [ListItems, setList] = useState([]);
 
   useEffect(() => {
-    const getList = () => {
-      axios
+    const getList = async () => {
+      await axios
         .get("http://localhost:8080/api/Users/")
         .then((request) => {
           setList(request.data);
@@ -118,7 +126,11 @@ function List(props) {
     }, 1000);
     return () => clearInterval(UpdateList);
   }, []);
-
+  ListItems.sort(
+    (a, b) =>
+      new Date(a.dateOfCreation).getTime() -
+      new Date(b.dateOfCreation).getTime()
+  ).reverse();
   return (
     <ListStyle>
       <table className="Tabela">
@@ -126,17 +138,17 @@ function List(props) {
           <tr>
             <td>Nome</td>
             <td>Sobrenome</td>
-
             <td className="tdShortWdt">Idade</td>
             <td>Data de Cadastro</td>
-            <td className="tdShortWdt">Editar</td>
-            <td className="tdShortWdt">Deletar</td>
+            <td colSpan={2} className="tdShortWdt">
+              Editar/Deletar
+            </td>
           </tr>
         </thead>
         <tbody>
           {ListItems.map((user, index) => {
             return (
-              <tr key={index}>
+              <tr className="Linha_Principal" key={index}>
                 <td colSpan={4}>
                   <table>
                     <tbody>
@@ -152,12 +164,7 @@ function List(props) {
                       </tr>
                       <tr>
                         <td className="idCell cell_info" colSpan={4}>
-                          <span
-                            style={{ fontWeight: "bold", color: "#c9c9c9" }}
-                          >
-                            Id:
-                          </span>{" "}
-                          {user.id}
+                          <span>Id:</span> {user.id}
                         </td>
                       </tr>
                     </tbody>
